@@ -1,0 +1,24 @@
+{
+	"id": "lib-df-buttons",
+	"title": "Library: DF Module Buttons",
+	"version": "2.0.3",
+	"description": "Library that provides a way for modules to register controls outside of the scene layer controls",
+	"authors": [ { "name": "flamewave000", "discord": "flamewave000", "url": "https://github.com/flamewave000" } ],
+	"compatibility": { "minimum": 12, "verified": 13 },
+	"esmodules": ["src/lib-df-buttons.mjs"],
+	"styles": ["css/core.css", "css/magnet.css"],
+	"languages": [
+		{ "lang": "en", "name": "English", "path": "lang/en.json" }
+	],
+	"url":		"https://github.com/rune-goblin/lib-df-buttons",
+	"license":	"https://github.com/rune-goblin/lib-df-buttons/blob/master/LICENSE",
+	"manifest":	"https://github.com/rune-goblin/lib-df-buttons/releases/latest/download/module.json",
+	"download":	"https://github.com/rune-goblin/lib-df-buttons/releases/latest/download/lib-df-buttons.zip",
+	"readme":	"https://github.com/rune-goblin/lib-df-buttons/blob/master/README.md",
+	"changelog":"https://github.com/rune-goblin/lib-df-buttons/blob/master/CHANGELOG.md",
+	"bugs":		"https://github.com/rune-goblin/lib-df-buttons/issues",
+	"media": [
+		{ "type": "cover", "url": "https://raw.githubusercontent.com/flamewave000/dragonflagon-fvtt/master/.assets/lib-df-buttons/cover.png"},
+		{ "type": "icon", "url": "https://raw.githubusercontent.com/flamewave000/dragonflagon-fvtt/master/.assets/logo.png" }
+	]
+}
