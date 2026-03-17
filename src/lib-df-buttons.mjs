@@ -8,42 +8,44 @@ SETTINGS.init('lib-df-buttons');
 Hooks.once('init', () => {
 	ui.moduleControls = new ControlManagerImpl();
 
+	// Legacy setting — kept registered so existing worlds don't error on load
 	SETTINGS.register('position', {
 		scope: 'client',
-		choices: {
-			right: 'LIB_DF_BUTTONS.choices.right',
-			left: 'LIB_DF_BUTTONS.choices.left',
-			top: 'LIB_DF_BUTTONS.choices.top',
-			bottom: 'LIB_DF_BUTTONS.choices.bottom'
-		},
-		name: 'LIB_DF_BUTTONS.name',
-		hint: 'LIB_DF_BUTTONS.hint',
+		type: String,
 		config: false,
 		default: 'left',
-		onChange: () => ui.moduleControls.render()
 	});
+	SETTINGS.register('toolbar-pos', {
+		scope: 'client',
+		type: Object,
+		config: false,
+		default: null,
+	});
+
+	// Use the v13 namespaced Sidebar, falling back to the global for v12
+	const SidebarClass = foundry.applications?.sidebar?.Sidebar ?? Sidebar;
 
 	// Soft Dependency on `libwrapper`. Only use it if it already exists
 	if (game.modules.get('libWrapper')?.active) {
-		libWrapper.register(SETTINGS.MOD_NAME, 'Sidebar.prototype.expand', /**@this {Sidebar}*/function (/**@type {Function}*/wrapped) {
+		libWrapper.register(SETTINGS.MOD_NAME, 'foundry.applications.sidebar.Sidebar.prototype.expand', function (wrapped) {
 			Hooks.callAll('collapseSidebarPre', this, !this._collapsed);
 			wrapped();
 		}, 'WRAPPER');
-		libWrapper.register(SETTINGS.MOD_NAME, 'Sidebar.prototype.collapse', /**@this {Sidebar}*/function (/**@type {Function}*/wrapped) {
+		libWrapper.register(SETTINGS.MOD_NAME, 'foundry.applications.sidebar.Sidebar.prototype.collapse', function (wrapped) {
 			Hooks.callAll('collapseSidebarPre', this, !this._collapsed);
 			wrapped();
 		}, 'WRAPPER');
 	}// Otherwise do the traditional style of monkey-patch wrapper
 	else {
-		Sidebar.prototype.expand_ORIG = Sidebar.prototype.expand;
-		Sidebar.prototype.expand = /**@this {Sidebar}*/function() {
+		const origExpand = SidebarClass.prototype.expand;
+		SidebarClass.prototype.expand = function() {
 			Hooks.callAll('collapseSidebarPre', this, !this._collapsed);
-			Sidebar.prototype.expand_ORIG.bind(this)();
+			origExpand.call(this);
 		};
-		Sidebar.prototype.collapse_ORIG = Sidebar.prototype.collapse;
-		Sidebar.prototype.collapse = /**@this {Sidebar}*/function() {
+		const origCollapse = SidebarClass.prototype.collapse;
+		SidebarClass.prototype.collapse = function() {
 			Hooks.callAll('collapseSidebarPre', this, !this._collapsed);
-			Sidebar.prototype.collapse_ORIG.bind(this)();
+			origCollapse.call(this);
 		};
 	}
 });
